@@ -50,9 +50,6 @@ const Clock = makeIcon('Clock');
 const Drumstick = makeIcon('Drumstick');
 const Sparkles = makeIcon('Sparkles');
 const Flame = makeIcon('Flame');
-const Briefcase = makeIcon('Briefcase');
-const HeartHandshake = makeIcon('HeartHandshake');
-const ClipboardList = makeIcon('ClipboardList');
 const Cloud = makeIcon('Cloud');
 const CloudOff = makeIcon('CloudOff');
 const Download = makeIcon('Download');
@@ -540,18 +537,7 @@ function Annotation({ a }) {
    MAIN APP
    ============================================================ */
 function App() {
-  const [orientation, setOrientation] = useState(() => {
-    if (typeof window === "undefined") return "landscape";
-    if (!window.matchMedia("(max-width: 900px)").matches) return "landscape";
-    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
-  });
-  useEffect(() => {
-    const orientMq = window.matchMedia("(orientation: portrait)");
-    const mobileMq = window.matchMedia("(max-width: 900px)");
-    const handleOrientation = () => { if (mobileMq.matches) setOrientation(orientMq.matches ? "portrait" : "landscape"); };
-    orientMq.addEventListener("change", handleOrientation);
-    return () => orientMq.removeEventListener("change", handleOrientation);
-  }, []);
+  const [orientation, setOrientation] = useState("landscape"); // 'portrait' | 'landscape'
   const [screen, setScreen] = useState("overview");
   const [lensOn, setLensOn] = useState(true);
   const [mobileLens, setMobileLens] = useState(false);
@@ -704,7 +690,7 @@ function Overview({ stats, orientation, setScreen }) {
     <div className={"hero" + (heroHot ? " hot" : " calm")}>
       <span className="hero-ic">{heroHot ? <AlertOctagon size={landscape ? 26 : 24} /> : <Check size={landscape ? 26 : 24} />}</span>
       <div className="hero-txt">
-        <span className="hero-eyebrow">ACT NOW</span>
+        <span className="hero-eyebrow">Needs your attention</span>
         <b>{heroHot ? `${stats.openSevere.length} severe ${stats.openSevere.length === 1 ? "case" : "cases"} open` : "No severe cases open"}</b>
         <small>{heroHot ? `Hb below 7 g/dL, not yet referred — oldest ${oldest.daysOpen} days.` : "Every severe case identified has a referral logged."}</small>
       </div>
@@ -1025,10 +1011,9 @@ const CSS = `
 .mobile-lens-btn{display:none;align-items:center;gap:7px;background:#fff7e8;border:1px solid var(--gold);color:#9a6a14;border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;}
 
 /* device frames — portrait phone vs. landscape "review tablet" */
-.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;}
-.device.landscape{contain:layout size;}
+.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;contain:layout size;}
 .device.portrait{width:390px;height:792px;border-radius:40px;padding:11px;}
-.device.landscape{width:min(1060px,100%,calc((100vh - 230px)*1.559));height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
+.device.landscape{width:min(1060px,100%);height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
 .device-notch{position:absolute;background:#1c1413;z-index:5;}
 .device.portrait .device-notch{top:11px;left:50%;transform:translateX(-50%);width:130px;height:26px;border-radius:0 0 16px 16px;}
 .device.landscape .device-notch{display:none;}
@@ -1168,27 +1153,19 @@ const CSS = `
 .sheet-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;} .sheet-head>span{display:flex;align-items:center;gap:7px;}
 .sheet-head button{background:transparent;border:0;color:var(--inkSoft);}
 
-@media(max-width:1280px){
+@media(max-width:1000px){
   .stage{grid-template-columns:1fr;max-width:920px;}
   .rail-left,.rail-right{display:none;}
   .devicewrap{position:static;}
   .mobile-lens-btn{display:flex;}
 }
 @media(max-width:920px){
-  .device.landscape{width:min(100%,900px,calc((100vh - 200px)*1.559));height:auto;aspect-ratio:1060/680;}
+  .device.landscape{width:100%;max-width:900px;height:auto;aspect-ratio:1060/680;}
   .device.portrait{width:100%;max-width:360px;height:auto;aspect-ratio:390/792;}
   .ov-top-row,.ov-charts-row,.two-col{grid-template-columns:1fr;}
   .kpi-row{grid-template-columns:1fr 1fr;}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
-@media(max-height:520px){
-  .topbar{padding:6px 14px!important;}
-  .stage{padding:8px 10px!important;}
-  .mobile-lens-btn{display:none!important;}
-  .devicewrap{gap:4px!important;}
-  .device.landscape{width:min(1060px,100%,calc((100vh - 60px)*1.559))!important;}
-  .rail-left,.rail-right{display:none!important;}
-}
 *:focus-visible{outline:2px solid ${C.gold};outline-offset:2px;}
 `;
 return App;
@@ -1396,18 +1373,7 @@ function Annotation({ a }) {
    MAIN APP
    ============================================================ */
 function App() {
-  const [orientation, setOrientation] = useState(() => {
-    if (typeof window === "undefined") return "landscape";
-    if (!window.matchMedia("(max-width: 900px)").matches) return "landscape";
-    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
-  });
-  useEffect(() => {
-    const orientMq = window.matchMedia("(orientation: portrait)");
-    const mobileMq = window.matchMedia("(max-width: 900px)");
-    const handleOrientation = () => { if (mobileMq.matches) setOrientation(orientMq.matches ? "portrait" : "landscape"); };
-    orientMq.addEventListener("change", handleOrientation);
-    return () => orientMq.removeEventListener("change", handleOrientation);
-  }, []);
+  const [orientation, setOrientation] = useState("landscape");
   const [screen, setScreen] = useState("worklist");
   const [selectedId, setSelectedId] = useState(null);
   const [lensOn, setLensOn] = useState(true);
@@ -1592,7 +1558,7 @@ function PatientDetail({ h, onMarkReferred }) {
         <div className="hbcard-lbl">Hemoglobin</div>
         <div className="hbcard-row"><span className="hbcard-val">{h.hb}<small>g/dL</small></span><span className="hbcard-band" style={{ background: h.cls.color }}>{h.cls.label}</span></div>
       </div>
-      <div className="detrow"><Clock size={14} /> Last visit {h.lastVisitDays} days ago — recheck due every {h.interval} days for this band.</div>
+      <div className="detrow"><Clock size={14} /> Last visit {h.lastVisitDays} days ago — recheck recommended every {h.interval} days.</div>
       <div className="detrow">{h.smartphone ? <><Phone size={14} /> Has a phone — a call can confirm before the next visit.</> : <><Home size={14} /> No phone on record — next contact needs an in-person visit.</>}</div>
       {!h.synced && <div className="detrow warn"><CloudOff size={14} /> This reading is saved on this device and hasn't synced yet.</div>}
       {h.referred ? (
@@ -1692,10 +1658,9 @@ const CSS = `
 .devicewrap{display:flex;flex-direction:column;align-items:center;gap:14px;position:sticky;top:90px;min-width:0;width:100%;}
 .mobile-lens-btn{display:none;align-items:center;gap:7px;background:#fff7e8;border:1px solid var(--gold);color:#9a6a14;border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;}
 
-.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;}
-.device.landscape{contain:layout size;}
+.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;contain:layout size;}
 .device.portrait{width:390px;height:792px;border-radius:40px;padding:11px;}
-.device.landscape{width:min(1060px,100%,calc((100vh - 230px)*1.559));height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
+.device.landscape{width:min(1060px,100%);height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
 .device-notch{position:absolute;background:#1c1413;z-index:5;}
 .device.portrait .device-notch{top:11px;left:50%;transform:translateX(-50%);width:130px;height:26px;border-radius:0 0 16px 16px;}
 .device.landscape .device-notch{display:none;}
@@ -1787,26 +1752,18 @@ const CSS = `
 .sheet-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;} .sheet-head>span{display:flex;align-items:center;gap:7px;}
 .sheet-head button{background:transparent;border:0;color:var(--inkSoft);}
 
-@media(max-width:1280px){
+@media(max-width:1000px){
   .stage{grid-template-columns:1fr;max-width:920px;}
   .rail-left,.rail-right{display:none;}
   .devicewrap{position:static;}
   .mobile-lens-btn{display:flex;}
 }
 @media(max-width:920px){
-  .device.landscape{width:min(100%,900px,calc((100vh - 200px)*1.559));height:auto;aspect-ratio:1060/680;}
+  .device.landscape{width:100%;max-width:900px;height:auto;aspect-ratio:1060/680;}
   .device.portrait{width:100%;max-width:360px;height:auto;aspect-ratio:390/792;}
   .split{grid-template-columns:1fr;}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
-@media(max-height:520px){
-  .topbar{padding:6px 14px!important;}
-  .stage{padding:8px 10px!important;}
-  .mobile-lens-btn{display:none!important;}
-  .devicewrap{gap:4px!important;}
-  .device.landscape{width:min(1060px,100%,calc((100vh - 60px)*1.559))!important;}
-  .rail-left,.rail-right{display:none!important;}
-}
 *:focus-visible{outline:2px solid ${C.gold};outline-offset:2px;}
 `;
 return App;
@@ -1814,33 +1771,52 @@ return App;
 </script>
 <script id="module-admin-shell" type="text/babel" data-presets="react">
 const ADMIN_ROLES = [
-  { k: "supervisor", name: "Dr. Nair", role: "Program Supervisor", desc: "Oversee screening across blocks, villages and ASHAs", icon: LayoutDashboard, color: "#2B5B86", soft: "#E3ECF2" },
-  { k: "asha", name: "Sunita", role: "ASHA Worker", desc: "Plan home visits and support the families on her list", icon: Briefcase, color: "#2F6B5E", soft: "#DCEAE5" },
+  { k: "supervisor", name: "Dr. Nair", role: "Program Supervisor" },
+  { k: "asha", name: "Sunita", role: "ASHA Worker" },
 ];
 
-function AdminShell() {
-  const [role, setRole] = useState(null);
+const IllusSupervisor = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <circle cx="8" cy="7" r="3.5" stroke="white" strokeWidth="1.5"/>
+    <path d="M1.5 21C1.5 17.1 4.4 14 8 14C11.6 14 14.5 17.1 14.5 21" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    <rect x="16" y="5" width="6.5" height="8.5" rx="1.5" stroke="white" strokeWidth="1.3"/>
+    <path d="M18 8H21" stroke="white" strokeWidth="1.2" strokeLinecap="round"/>
+    <path d="M18 10.5H21" stroke="white" strokeWidth="1.2" strokeLinecap="round"/>
+    <path d="M18 6.5H19.5" stroke="white" strokeWidth="1" strokeLinecap="round"/>
+  </svg>
+);
+const IllusAsha = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <rect x="3" y="9" width="18" height="13" rx="2" stroke="white" strokeWidth="1.5"/>
+    <path d="M8 9V7C8 5.3 9.3 4 11 4H13C14.7 4 16 5.3 16 7V9" stroke="white" strokeWidth="1.5"/>
+    <path d="M12 13.5V17.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M10 15.5H14" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+function AdminShell({ role, setRole }) {
+  const ROLE_CARDS = [
+    { k: "supervisor", name: "Dr. Nair", role: "Program Supervisor", sub: "District-level dashboard · 9 blocks · 9 ASHAs", color: "linear-gradient(135deg, #3B70A8 0%, #1E4472 100%)", Illus: IllusSupervisor },
+    { k: "asha", name: "Sunita", role: "ASHA Field Worker", sub: "17 households · Dumra block, Sitamarhi", color: "linear-gradient(135deg, #A02535 0%, #5A141E 100%)", Illus: IllusAsha },
+  ];
 
   if (!role) {
     return (
-      <div className="persona-pick-root">
-        <style>{PERSONA_PICK_CSS}</style>
-        <div className="persona-pick-wrap">
-          <p className="persona-pick-eyebrow">Admin</p>
-          <h2 className="persona-pick-h2">Who's signing in?</h2>
-          <p className="persona-pick-lead">Choose the role that matches what you're here to do today.</p>
-          <div className="persona-pick-grid">
-            {ADMIN_ROLES.map((r) => (
-              <button key={r.k} className="persona-card" onClick={() => setRole(r.k)} style={{ "--accent": r.color, "--accent-soft": r.soft }}>
-                <span className="persona-card-glow" />
-                <span className="persona-card-ic"><r.icon size={28} /></span>
-                <b className="persona-card-name">{r.name}</b>
-                <span className="persona-card-role">{r.role}</span>
-                <small className="persona-card-desc">{r.desc}</small>
-                <span className="persona-card-cta">Continue <ChevronRight size={14} /></span>
-              </button>
-            ))}
-          </div>
+      <div className="rs-picker">
+        <p className="rs-picker-eyebrow">Admin access</p>
+        <h2 className="rs-picker-title">Who are you today?</h2>
+        <p className="rs-picker-desc">Two views into the same programme data — the district office and the field.</p>
+        <div className="rs-picker-grid">
+          {ROLE_CARDS.map((r) => (
+            <button key={r.k} className="rs-picker-card" onClick={() => setRole(r.k)}>
+              <span className="rs-picker-badge" style={{ background: r.color }}><r.Illus /></span>
+              <div>
+                <b className="rs-picker-name">{r.name}</b>
+                <span className="rs-picker-role">{r.role}</span>
+                <small className="rs-picker-sub">{r.sub}</small>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     );
@@ -1848,35 +1824,13 @@ function AdminShell() {
 
   return (
     <div>
-      <button className="persona-back-btn" onClick={() => setRole(null)}><ChevronLeft size={15} /> Switch role</button>
+      <button className="rs-picker-back" onClick={() => setRole(null)}><ChevronLeft size={14} /> Switch role</button>
       {role === "supervisor" && React.createElement(Module_Supervisor)}
       {role === "asha" && React.createElement(Module_AshaWorker)}
     </div>
   );
 }
 
-const PERSONA_PICK_CSS = `
-*{box-sizing:border-box;}
-.persona-pick-root{font-family:'Mukta',system-ui,sans-serif;background:#FAF5EE;min-height:100vh;}
-.persona-pick-wrap{max-width:760px;margin:0 auto;padding:56px 22px 60px;text-align:center;}
-.persona-pick-eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C08A2D;margin:0 0 10px;}
-.persona-pick-h2{font-size:27px;font-weight:800;color:#2A1F1D;margin:0 0 8px;}
-.persona-pick-lead{font-size:14.5px;color:#6B5D58;margin:0 0 36px;line-height:1.5;}
-.persona-pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.persona-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;background:#fff;border:1px solid #EADFCF;border-radius:24px;padding:30px 22px 26px;cursor:pointer;text-align:center;overflow:hidden;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;}
-.persona-card:hover{transform:translateY(-4px);box-shadow:0 18px 34px -14px rgba(40,30,20,.22);border-color:var(--accent);}
-.persona-card:hover .persona-card-cta{opacity:1;transform:translateY(0);}
-.persona-card:hover .persona-card-glow{opacity:1;}
-.persona-card-glow{position:absolute;inset:0;background:radial-gradient(120px 90px at 50% -10%, var(--accent-soft), transparent 70%);opacity:.6;transition:opacity .2s ease;pointer-events:none;}
-.persona-card-ic{position:relative;width:60px;height:60px;border-radius:18px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:6px;}
-.persona-card-name{position:relative;font-size:17px;color:#2A1F1D;}
-.persona-card-role{position:relative;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.03em;}
-.persona-card-desc{position:relative;font-size:12.5px;color:#6B5D58;line-height:1.5;margin-top:2px;}
-.persona-card-cta{position:relative;display:flex;align-items:center;gap:3px;margin-top:10px;font-size:12px;font-weight:700;color:var(--accent);opacity:0;transform:translateY(4px);transition:opacity .2s ease, transform .2s ease;}
-.persona-back-btn{display:flex;align-items:center;gap:5px;margin:14px;padding:9px 15px;background:#fff;border:1px solid #EADFCF;border-radius:11px;font-size:13px;font-weight:600;color:#6B5D58;cursor:pointer;}
-.persona-back-btn:hover{border-color:#C08A2D;color:#2A1F1D;}
-@media(max-width:560px){.persona-pick-grid{grid-template-columns:1fr;}}
-`;
 </script>
 <script id="module-user-ramesh" type="text/babel" data-presets="react">
 const Module_Ramesh = (function() {
@@ -1912,10 +1866,10 @@ const HB_CUTOFFS = {
 function classifyHb(hb, group) {
   const cut = HB_CUTOFFS[group] || HB_CUTOFFS.adult;
   if (hb == null) return { key: "none", label: "—", color: C.inkSoft };
-  if (hb < cut.sev) return { key: "severe", label: "Needs care now", color: C.garnet };
-  if (hb <= cut.mod) return { key: "moderate", label: "Needs some attention", color: C.amber };
-  if (hb <= cut.mild) return { key: "mild", label: "Worth watching", color: C.gold };
-  return { key: "normal", label: "Healthy range", color: C.teal };
+  if (hb < cut.sev) return { key: "severe", label: "Severe", color: C.garnet };
+  if (hb <= cut.mod) return { key: "moderate", label: "Moderate", color: C.amber };
+  if (hb <= cut.mild) return { key: "mild", label: "Mild", color: C.gold };
+  return { key: "normal", label: "Normal", color: C.teal };
 }
 
 /* ============================================================
@@ -2008,18 +1962,7 @@ function Annotation({ a }) {
    MAIN APP
    ============================================================ */
 function App({ familyData, setFamilyData }) {
-  const [orientation, setOrientation] = useState(() => {
-    if (typeof window === "undefined") return "landscape";
-    if (!window.matchMedia("(max-width: 900px)").matches) return "landscape";
-    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
-  });
-  useEffect(() => {
-    const orientMq = window.matchMedia("(orientation: portrait)");
-    const mobileMq = window.matchMedia("(max-width: 900px)");
-    const handleOrientation = () => { if (mobileMq.matches) setOrientation(orientMq.matches ? "portrait" : "landscape"); };
-    orientMq.addEventListener("change", handleOrientation);
-    return () => orientMq.removeEventListener("change", handleOrientation);
-  }, []);
+  const [orientation, setOrientation] = useState("landscape");
   const [lensOn, setLensOn] = useState(true);
   const [mobileLens, setMobileLens] = useState(false);
   const [consented, setConsented] = useState(false);
@@ -2148,7 +2091,7 @@ function FamilyApp({ orientation, screen, setScreen, wife, setWife, daughter, me
     <div className={"dash " + orientation}>
       <div className="dash-banner">
         <span><Home size={14} /> Ramesh · Mirzapur, Dumra, Sitamarhi</span>
-        <span className={"dash-week" + (needsAttention ? " warn" : "")}>{needsAttention} of 3 needs attention</span>
+        <span className={"dash-week" + (needsAttention ? " warn" : "")}>{needsAttention ? "A follow-up may help" : "Everyone on track"}</span>
       </div>
       {landscape && (
         <nav className="top-tabs">
@@ -2171,7 +2114,7 @@ function HbHistoryChart({ readings, width = 280, height = 110 }) {
     return (
       <div className="hb-empty">
         <Activity size={22} color={C.inkSoft} />
-        <small>No readings yet — adult men aren't screened under any AMB programme.</small>
+        <small>No readings logged yet — tap below to start your own record.</small>
       </div>
     );
   }
@@ -2339,7 +2282,7 @@ function DaughterDetail({ daughter }) {
         <>
           <div className="hbcard" style={{ borderColor: cls.color }}>
             <div className="hbcard-lbl">Hemoglobin</div>
-            <div className="hbcard-row"><span className="hbcard-val">{daughter.hbHistory[daughter.hbHistory.length - 1].hb}<small>g/dL</small></span><span className="hbcard-band" style={{ background: cls.color }}>{cls.label}</span></div>
+            <div className="hbcard-row"><span className="hbcard-val">{daughter.hbHistory[daughter.hbHistory.length - 1].hb}<small>g/dL</small></span><span className="hbcard-band" style={{ background: cls.color }}>{{ "severe": "Needs care", "moderate": "Low iron", "mild": "Slightly low", "normal": "Healthy" }[cls.key] || cls.label}</span></div>
             <div className="hbcard-note">She turned sharing on from her own phone — this updates live if she ever turns it off again.</div>
           </div>
           <div className="ifa-summary-row"><span className="ifa-summary-big">{daughter.ifaTakenDays.length} of {mondaysSoFar}</span><span className="hint-sm" style={{ margin: 0 }}>Mondays taken this month — weekly WIFS tablet, via school.</span></div>
@@ -2410,13 +2353,13 @@ function WifeDetail({ wife, setWife, cls }) {
       </div>
       <div className="hbcard" style={{ borderColor: cls.color }}>
         <div className="hbcard-lbl">Hemoglobin</div>
-        <div className="hbcard-row"><span className="hbcard-val">{latestHb}<small>g/dL</small></span><span className="hbcard-band" style={{ background: cls.color }}>{cls.label}</span></div>
-        <div className="hbcard-note">Same reading Sunita recorded — reclassified Mild, not Moderate, under pregnancy-specific cutoffs. Same live data her own app (Phulmani's profile) shows.</div>
+        <div className="hbcard-row"><span className="hbcard-val">{latestHb}<small>g/dL</small></span><span className="hbcard-band" style={{ background: cls.color }}>{{ "severe": "Needs care", "moderate": "Low iron", "mild": "Slightly low", "normal": "Healthy" }[cls.key] || cls.label}</span></div>
+        <div className="hbcard-note">Reading from Sunita's last visit. Matches what Phulmani sees in her own profile.</div>
       </div>
       {overdueForCheck && (
         <div className="detrow warn"><Clock size={14} /> Last check {wife.lastVisitDays} days ago — antenatal visits need a tighter interval once pregnant. Worth a Sub-Health Centre visit.</div>
       )}
-      <div className="detrow"><Pill size={14} /> 60mg iron + 500mcg folic acid, <b>daily</b>, red tablet — started {wife.ifaStartedDaysAgo} days ago, in her 2nd trimester. (1st-trimester iron is withheld under the same protocol — teratogenicity risk.)</div>
+      <div className="detrow"><Pill size={14} /> 60mg iron + 500mcg folic acid, <b>daily</b>, red tablet — started {wife.ifaStartedDaysAgo} days ago. (Iron is not given in the first three months of pregnancy — a standard safety precaution.)</div>
       <div className="ifa-summary-row"><span className="ifa-summary-big">{ifaTakenCount} of {ifaDaysPossible}</span><span className="hint-sm" style={{ margin: 0 }}>days taken since she started — a fuller view than this, day by day, is on her own profile.</span></div>
       {!wife.smartphone && <div className="detrow"><Phone size={14} /> No phone of her own on record — Sunita's next visit is in person, not a call.</div>}
       {showLogForm ? (
@@ -2468,10 +2411,9 @@ const CSS = `
 .devicewrap{display:flex;flex-direction:column;align-items:center;gap:14px;position:sticky;top:90px;min-width:0;width:100%;}
 .mobile-lens-btn{display:none;align-items:center;gap:7px;background:#fff7e8;border:1px solid var(--gold);color:#9a6a14;border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;}
 
-.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;}
-.device.landscape{contain:layout size;}
+.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;contain:layout size;}
 .device.portrait{width:390px;height:792px;border-radius:40px;padding:11px;}
-.device.landscape{width:min(1060px,100%,calc((100vh - 230px)*1.559));height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
+.device.landscape{width:min(1060px,100%);height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
 .device-notch{position:absolute;background:#1c1413;z-index:5;}
 .device.portrait .device-notch{top:11px;left:50%;transform:translateX(-50%);width:130px;height:26px;border-radius:0 0 16px 16px;}
 .device.landscape .device-notch{display:none;}
@@ -2590,26 +2532,18 @@ const CSS = `
 .sheet-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;} .sheet-head>span{display:flex;align-items:center;gap:7px;}
 .sheet-head button{background:transparent;border:0;color:var(--inkSoft);}
 
-@media(max-width:1280px){
+@media(max-width:1000px){
   .stage{grid-template-columns:1fr;max-width:920px;}
   .rail-left,.rail-right{display:none;}
   .devicewrap{position:static;}
   .mobile-lens-btn{display:flex;}
 }
 @media(max-width:920px){
-  .device.landscape{width:min(100%,900px,calc((100vh - 200px)*1.559));height:auto;aspect-ratio:1060/680;}
+  .device.landscape{width:100%;max-width:900px;height:auto;aspect-ratio:1060/680;}
   .device.portrait{width:100%;max-width:360px;height:auto;aspect-ratio:390/792;}
   .split{grid-template-columns:1fr;}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
-@media(max-height:520px){
-  .topbar{padding:6px 14px!important;}
-  .stage{padding:8px 10px!important;}
-  .mobile-lens-btn{display:none!important;}
-  .devicewrap{gap:4px!important;}
-  .device.landscape{width:min(1060px,100%,calc((100vh - 60px)*1.559))!important;}
-  .rail-left,.rail-right{display:none!important;}
-}
 *:focus-visible{outline:2px solid ${C.gold};outline-offset:2px;}
 `;
 return App;
@@ -2649,10 +2583,10 @@ const HB_CUTOFFS = { pregnant: { sev: 7, mod: 9.9, mild: 10.9 }, adult: { sev: 8
 function classifyHb(hb, group) {
   const cut = HB_CUTOFFS[group] || HB_CUTOFFS.pregnant;
   if (hb == null) return { key: "none", label: "—", color: C.inkSoft };
-  if (hb < cut.sev) return { key: "severe", label: "Needs care now", color: C.garnet };
-  if (hb <= cut.mod) return { key: "moderate", label: "Needs some attention", color: C.amber };
-  if (hb <= cut.mild) return { key: "mild", label: "Worth watching", color: C.gold };
-  return { key: "normal", label: "Healthy range", color: C.teal };
+  if (hb < cut.sev) return { key: "severe", label: "Severe", color: C.garnet };
+  if (hb <= cut.mod) return { key: "moderate", label: "Moderate", color: C.amber };
+  if (hb <= cut.mild) return { key: "mild", label: "Mild", color: C.gold };
+  return { key: "normal", label: "Normal", color: C.teal };
 }
 
 /* ---------- real congruent identity (matches Persona 3 exactly) ---------- */
@@ -2887,7 +2821,7 @@ function IfaMonthCalendar({ takenDays, onMarkToday }) {
       ))}
       <div className="ifa-cal-legend">
         <span><i className="dot taken" /> Taken</span>
-        <span><i className="dot missed" /> Missed</span>
+        <span><i className="dot missed" /> Not yet taken</span>
         <span><i className="dot today" /> Today</span>
         <span><i className="dot upcoming" /> Upcoming</span>
       </div>
@@ -2924,18 +2858,7 @@ function ClinicMapView({ height = 260 }) {
    MAIN APP
    ============================================================ */
 function App({ familyData, setFamilyData }) {
-  const [orientation, setOrientation] = useState(() => {
-    if (typeof window === "undefined") return "landscape";
-    if (!window.matchMedia("(max-width: 900px)").matches) return "landscape";
-    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
-  });
-  useEffect(() => {
-    const orientMq = window.matchMedia("(orientation: portrait)");
-    const mobileMq = window.matchMedia("(max-width: 900px)");
-    const handleOrientation = () => { if (mobileMq.matches) setOrientation(orientMq.matches ? "portrait" : "landscape"); };
-    orientMq.addEventListener("change", handleOrientation);
-    return () => orientMq.removeEventListener("change", handleOrientation);
-  }, []);
+  const [orientation, setOrientation] = useState("landscape");
   const [lensOn, setLensOn] = useState(true);
   const [mobileLens, setMobileLens] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
@@ -3094,10 +3017,10 @@ function SelfHome({ cls, hb, hbHistory, lang, ifaTakenDays, setIfaTakenDays, set
       <div className="panel-h"><Activity size={14} /> {lang === "hi" ? "हीमोग्लोबिन इतिहास" : "Hemoglobin history"}</div>
       <HbHistoryChart readings={hbHistory} />
       <div className="hbcard-row" style={{ marginTop: 4 }}>
-        <span className="hbcard-band" style={{ background: cls.color }}>{cls.label}</span>
-        <span className="hint-sm" style={{ margin: 0 }}>{hb} g/dL, same reading Sunita recorded.</span>
+        <span className="hbcard-band" style={{ background: cls.color }}>{{ "severe": "Needs care", "moderate": "Low iron", "mild": "Slightly low", "normal": "Healthy" }[cls.key] || cls.label}</span>
+        <span className="hint-sm" style={{ margin: 0 }}>{hb} g/dL — your reading from your last check-up.</span>
       </div>
-      <div className="overdue-note"><Heart size={12} /> {lang === "hi" ? "गर्भावस्था की पुष्टि के बाद से जाँच नहीं हुई है — पहली ANC जाँच जल्दी करवा लेना अच्छा रहेगा।" : "It's been a little while since your last Hb check — your first ANC visit is worth scheduling soon."}</div>
+      <div className="overdue-note"><AlertTriangle size={12} /> {lang === "hi" ? "गर्भावस्था की पुष्टि के बाद से कोई नई जाँच नहीं — पहली ANC जाँच ज़रूरी है।" : "Your first prenatal blood check is now due — this helps keep track of how you and your baby are doing."}</div>
     </div>
   );
   const IfaCard = (
@@ -3107,7 +3030,7 @@ function SelfHome({ cls, hb, hbHistory, lang, ifaTakenDays, setIfaTakenDays, set
       <button className={"ifa-mark" + (todayTaken ? " done" : "")} onClick={markToday}>
         {todayTaken ? <><Check size={16} /> {lang === "hi" ? "आज ली" : "Today's tablet taken"}</> : (lang === "hi" ? "आज की गोली लें" : "Mark today's tablet")}
       </button>
-      <div className="hint-sm">60mg + 500mcg, daily — 2nd trimester onward only.</div>
+      <div className="hint-sm">One red tablet daily — started in the 2nd trimester, as recommended.</div>
     </div>
   );
   const LmpCard = (
@@ -3160,7 +3083,7 @@ function SymptomChecker({ lang, setScreen, knownCls, setJournal }) {
         <h2 className="result-band" style={{ color: result.color }}>{result.label}</h2>
         <p className="result-note">{result.note}</p>
         <div className="disclaimer"><CircleHelp size={13} /> {lang === "hi" ? "यह एक मार्गदर्शक है, निदान नहीं।" : "This is a guide, not a diagnosis — your last lab test (Mild) still stands."}</div>
-        {consistent && <div className="consistency-note"><Check size={13} /> {lang === "hi" ? "यह आपकी पिछली जाँच से मेल खाता है।" : "Consistent with her known lab result (Mild) — the checker isn't contradicting Sunita's screening."}</div>}
+        {consistent && <div className="consistency-note"><Check size={13} /> {lang === "hi" ? "यह आपकी पिछली जाँच से मेल खाता है।" : "This is in line with your last Hb reading — a reassuring sign things are consistent."}</div>}
         <button className="btn btn-primary btn-lg" onClick={() => { setJournal((j) => [{ id: Date.now(), daysAgo: 0, band: result.band, note: lang === "hi" ? "आज जाँच की" : "Checked today" }, ...j]); setScreen("journal"); }}>
           <BookOpen size={15} /> {lang === "hi" ? "जर्नल में सहेजें" : "Save to my journal"}
         </button>
@@ -3194,7 +3117,7 @@ function Journal({ journal, hb, cls }) {
       <div className="panel">
         <div className="panel-h"><Droplet size={14} /> Period history — full detail</div>
         <LmpChart />
-        <div className="hint-sm">Filled red dot = her real last period (LMP). Hollow white dots = expected, didn't come — that's what first suggested pregnancy.</div>
+        <div className="hint-sm">Filled dot = last period. Hollow dots = expected but didn't come — a natural sign that pregnancy had begun.</div>
       </div>
       <p className="hint">Her shared status: Hb {hb}, {cls.label}. Everything below stays hers alone.</p>
       {journal.map((j) => (
@@ -3263,10 +3186,9 @@ const CSS = `
 .devicewrap{display:flex;flex-direction:column;align-items:center;gap:14px;position:sticky;top:90px;min-width:0;width:100%;}
 .mobile-lens-btn{display:none;align-items:center;gap:7px;background:#fff7e8;border:1px solid var(--gold);color:#9a6a14;border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;}
 
-.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;}
-.device.landscape{contain:layout size;}
+.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;contain:layout size;}
 .device.portrait{width:390px;height:792px;border-radius:40px;padding:11px;}
-.device.landscape{width:min(1060px,100%,calc((100vh - 230px)*1.559));height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
+.device.landscape{width:min(1060px,100%);height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
 .device-notch{position:absolute;background:#1c1413;z-index:5;}
 .device.portrait .device-notch{top:11px;left:50%;transform:translateX(-50%);width:130px;height:26px;border-radius:0 0 16px 16px;}
 .device.landscape .device-notch{display:none;}
@@ -3382,27 +3304,19 @@ const CSS = `
 .sheet-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;} .sheet-head>span{display:flex;align-items:center;gap:7px;}
 .sheet-head button{background:transparent;border:0;color:var(--inkSoft);}
 
-@media(max-width:1280px){
+@media(max-width:1000px){
   .stage{grid-template-columns:1fr;max-width:920px;}
   .rail-left,.rail-right{display:none;}
   .devicewrap{position:static;}
   .mobile-lens-btn{display:flex;}
 }
 @media(max-width:920px){
-  .device.landscape{width:min(100%,900px,calc((100vh - 200px)*1.559));height:auto;aspect-ratio:1060/680;}
+  .device.landscape{width:100%;max-width:900px;height:auto;aspect-ratio:1060/680;}
   .device.portrait{width:100%;max-width:360px;height:auto;aspect-ratio:390/792;}
   .home-cols{grid-template-columns:1fr;}
   .home-cols3{grid-template-columns:1fr;}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
-@media(max-height:520px){
-  .topbar{padding:6px 14px!important;}
-  .stage{padding:8px 10px!important;}
-  .mobile-lens-btn{display:none!important;}
-  .devicewrap{gap:4px!important;}
-  .device.landscape{width:min(1060px,100%,calc((100vh - 60px)*1.559))!important;}
-  .rail-left,.rail-right{display:none!important;}
-}
 *:focus-visible{outline:2px solid ${C.gold};outline-offset:2px;}
 `;
 return App;
@@ -3444,10 +3358,10 @@ const HB_CUTOFFS = { adolescent: { sev: 8, mod: 10.9, mild: 11.9 } };
 function classifyHb(hb) {
   const cut = HB_CUTOFFS.adolescent;
   if (hb == null) return { key: "none", label: "—", color: C.inkSoft };
-  if (hb < cut.sev) return { key: "severe", label: "Needs care now", color: C.garnet };
-  if (hb <= cut.mod) return { key: "moderate", label: "Needs some attention", color: C.amber };
-  if (hb <= cut.mild) return { key: "mild", label: "Worth watching", color: C.gold };
-  return { key: "normal", label: "Healthy range", color: C.teal };
+  if (hb < cut.sev) return { key: "severe", label: "Severe", color: C.garnet };
+  if (hb <= cut.mod) return { key: "moderate", label: "Moderate", color: C.amber };
+  if (hb <= cut.mild) return { key: "mild", label: "Mild", color: C.gold };
+  return { key: "normal", label: "Normal", color: C.teal };
 }
 
 /* ---------- real congruent identity (matches Personas 1-3) ---------- */
@@ -3604,7 +3518,7 @@ function IfaMonthCalendar({ takenDays, onMarkToday }) {
       ))}
       <div className="ifa-cal-legend">
         <span><i className="dot taken" /> Taken</span>
-        <span><i className="dot missed" /> Missed</span>
+        <span><i className="dot missed" /> Not yet taken</span>
         <span><i className="dot today" /> Today</span>
         <span><i className="dot upcoming" /> Upcoming</span>
       </div>
@@ -3686,18 +3600,7 @@ function ClinicMapView({ height = 260 }) {
    MAIN APP
    ============================================================ */
 function App({ familyData, setFamilyData }) {
-  const [orientation, setOrientation] = useState(() => {
-    if (typeof window === "undefined") return "landscape";
-    if (!window.matchMedia("(max-width: 900px)").matches) return "landscape";
-    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
-  });
-  useEffect(() => {
-    const orientMq = window.matchMedia("(orientation: portrait)");
-    const mobileMq = window.matchMedia("(max-width: 900px)");
-    const handleOrientation = () => { if (mobileMq.matches) setOrientation(orientMq.matches ? "portrait" : "landscape"); };
-    orientMq.addEventListener("change", handleOrientation);
-    return () => orientMq.removeEventListener("change", handleOrientation);
-  }, []);
+  const [orientation, setOrientation] = useState("landscape");
   const [lensOn, setLensOn] = useState(true);
   const [mobileLens, setMobileLens] = useState(false);
   const [screen, setScreen] = useState("home");
@@ -3815,22 +3718,22 @@ function Home({ cls, shared, setShared, hbHistory, ifaTakenDays, setIfaTakenDays
 
   const HbCard = (
     <div className="panel">
-      <div className="panel-h"><Activity size={14} /> Hemoglobin — last {hbHistory.length} readings</div>
+      <div className="panel-h"><Activity size={14} /> Your iron levels — {hbHistory.length} readings</div>
       <HbTrendChart readings={hbHistory} />
       <div className="hbcard-row" style={{ marginTop: 6 }}>
-        <span className="hbcard-band" style={{ background: cls.color }}>{cls.label}</span>
-        <span className="hint-sm" style={{ margin: 0 }}>Latest matches Sunita's last record exactly.</span>
+        <span className="hbcard-band" style={{ background: cls.color }}>{{ "severe": "Needs care", "moderate": "Low iron", "mild": "Slightly low", "normal": "Healthy" }[cls.key] || cls.label}</span>
+        <span className="hint-sm" style={{ margin: 0 }}>Your most recent reading from your last check-up.</span>
       </div>
     </div>
   );
   const IfaCard = (
     <div className="panel">
-      <div className="panel-h"><Pill size={14} /> Iron tablet — weekly, blue — {IFA_MONTH_NAME}</div>
+      <div className="panel-h"><Pill size={14} /> Weekly iron tablet — {IFA_MONTH_NAME}</div>
       <IfaMonthCalendar takenDays={ifaTakenDays} onMarkToday={markToday} />
       <button className={"ifa-mark" + (todayTaken ? " done" : "")} onClick={markToday}>
-        {todayTaken ? <><Check size={16} /> Today's tablet taken</> : "Mark today's tablet (day 15)"}
+        {todayTaken ? <><Check size={16} /> Today's tablet taken</> : "Take today's iron tablet"}
       </button>
-      <div className="hint-sm">Only Mondays are coloured — that's the real School Health Programme schedule, not a daily one.</div>
+      <div className="hint-sm">One tablet every Monday — that's all. Blue tablet, through your school.</div>
     </div>
   );
   const CycleCard = (
@@ -4000,10 +3903,9 @@ const CSS = `
 .devicewrap{display:flex;flex-direction:column;align-items:center;gap:14px;position:sticky;top:90px;min-width:0;width:100%;}
 .mobile-lens-btn{display:none;align-items:center;gap:7px;background:#fff7e8;border:1px solid var(--gold);color:#9a6a14;border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;}
 
-.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;}
-.device.landscape{contain:layout size;}
+.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;contain:layout size;}
 .device.portrait{width:390px;height:792px;border-radius:40px;padding:11px;}
-.device.landscape{width:min(1060px,100%,calc((100vh - 230px)*1.559));height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
+.device.landscape{width:min(1060px,100%);height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
 .device-notch{position:absolute;background:#1c1413;z-index:5;}
 .device.portrait .device-notch{top:11px;left:50%;transform:translateX(-50%);width:130px;height:26px;border-radius:0 0 16px 16px;}
 .device.landscape .device-notch{display:none;}
@@ -4110,27 +4012,19 @@ const CSS = `
 .sheet-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;} .sheet-head>span{display:flex;align-items:center;gap:7px;}
 .sheet-head button{background:transparent;border:0;color:var(--inkSoft);}
 
-@media(max-width:1280px){
+@media(max-width:1000px){
   .stage{grid-template-columns:1fr;max-width:920px;}
   .rail-left,.rail-right{display:none;}
   .devicewrap{position:static;}
   .mobile-lens-btn{display:flex;}
 }
 @media(max-width:920px){
-  .device.landscape{width:min(100%,900px,calc((100vh - 200px)*1.559));height:auto;aspect-ratio:1060/680;}
+  .device.landscape{width:100%;max-width:900px;height:auto;aspect-ratio:1060/680;}
   .device.portrait{width:100%;max-width:360px;height:auto;aspect-ratio:390/792;}
   .home-cols{grid-template-columns:1fr;}
   .home-cols3{grid-template-columns:1fr;}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
-@media(max-height:520px){
-  .topbar{padding:6px 14px!important;}
-  .stage{padding:8px 10px!important;}
-  .mobile-lens-btn{display:none!important;}
-  .devicewrap{gap:4px!important;}
-  .device.landscape{width:min(1060px,100%,calc((100vh - 60px)*1.559))!important;}
-  .rail-left,.rail-right{display:none!important;}
-}
 *:focus-visible{outline:2px solid ${C.gold};outline-offset:2px;}
 `;
 return App;
@@ -4166,35 +4060,63 @@ const FAMILY_DATA_INITIAL = {
 };
 
 const USER_PROFILES = [
-  { k: "ramesh", name: "Ramesh", role: "Head of household", desc: "See the whole household's care, all in one place", icon: Home, color: "#7A1F2B", soft: "#F3E1E4" },
-  { k: "phulmani", name: "Phulmani Kumari", role: "Wife", desc: "A private, PIN-protected space just for her own care", icon: HeartHandshake, color: "#C0507A", soft: "#F8E3EC" },
-  { k: "anjali", name: "Anjali Devi", role: "Daughter", desc: "Her own private check-ins — shared only if she chooses", icon: Sparkles, color: "#7A3FA0", soft: "#EAE0F2" },
+  { k: "ramesh", name: "Ramesh", role: "Head of household" },
+  { k: "phulmani", name: "Phulmani Kumari", role: "Wife — PIN required" },
+  { k: "anjali", name: "Anjali Devi", role: "Daughter" },
 ];
 
-function UserShell() {
+const IllusRamesh = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path d="M3 11L12 3L21 11" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M5 10V21H9.5V16H14.5V21H19V10" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M11.5 10C11.5 10 10 8.5 9 9C8 9.5 8 11 9 11.8L11.5 14L14 11.8C15 11 15 9.5 14 9C13 8.5 11.5 10 11.5 10Z" fill="white"/>
+  </svg>
+);
+const IllusPhulmani = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="5" r="2.8" stroke="white" strokeWidth="1.5"/>
+    <path d="M9 9.5C8.2 11 7.5 12.5 7.5 14.5C7.5 17.8 9.5 21 12 21C14.5 21 16.5 17.8 16.5 14.5C16.5 12.5 15.8 11 15 9.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M9.5 9.5H14.5" stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
+    <circle cx="12" cy="15" r="2" fill="white" fillOpacity="0.5" stroke="white" strokeWidth="1"/>
+  </svg>
+);
+const IllusAnjali = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <circle cx="9" cy="6" r="3" stroke="white" strokeWidth="1.5"/>
+    <path d="M2.5 21C2.5 17.7 5.4 15 9 15C12.6 15 15.5 17.7 15.5 21" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    <rect x="15.5" y="10" width="7" height="5.5" rx="1" stroke="white" strokeWidth="1.3"/>
+    <path d="M19 10V15.5" stroke="white" strokeWidth="1.2" strokeLinecap="round"/>
+    <path d="M16.5 12.5H21.5" stroke="white" strokeWidth="0.9" strokeLinecap="round" strokeOpacity="0.8"/>
+    <path d="M16.5 13.8H21.5" stroke="white" strokeWidth="0.9" strokeLinecap="round" strokeOpacity="0.8"/>
+  </svg>
+);
+
+function UserShell({ profile, setProfile }) {
   const [familyData, setFamilyData] = useState(FAMILY_DATA_INITIAL);
-  const [profile, setProfile] = useState(null);
+
+  const PROFILE_CARDS = [
+    { k: "ramesh", name: "Ramesh", role: "Head of Household", sub: "His own health, his wife's updates, and his daughter's boundaries — on one screen", color: "linear-gradient(135deg, #3D8570 0%, #1D5444 100%)", Illus: IllusRamesh },
+    { k: "phulmani", name: "Phulmani Kumari", role: "Wife · PIN required", sub: "14 weeks pregnant · her own private space on the shared family phone", color: "linear-gradient(135deg, #D4A545 0%, #A06F20 100%)", Illus: IllusPhulmani },
+    { k: "anjali", name: "Anjali Devi", role: "Daughter", sub: "Adolescent · her own privacy defaults · weekly iron tablet at school", color: "linear-gradient(135deg, #9A55C0 0%, #5A2E80 100%)", Illus: IllusAnjali },
+  ];
 
   if (!profile) {
     return (
-      <div className="persona-pick-root">
-        <style>{USER_PERSONA_PICK_CSS}</style>
-        <div className="persona-pick-wrap">
-          <p className="persona-pick-eyebrow">User</p>
-          <h2 className="persona-pick-h2">Whose profile is this?</h2>
-          <p className="persona-pick-lead">One shared family phone, three people — choose who's using it right now.</p>
-          <div className="persona-pick-grid">
-            {USER_PROFILES.map((p) => (
-              <button key={p.k} className="persona-card" onClick={() => setProfile(p.k)} style={{ "--accent": p.color, "--accent-soft": p.soft }}>
-                <span className="persona-card-glow" />
-                <span className="persona-card-ic"><p.icon size={28} /></span>
-                <b className="persona-card-name">{p.name}</b>
-                <span className="persona-card-role">{p.role}</span>
-                <small className="persona-card-desc">{p.desc}</small>
-                <span className="persona-card-cta">Continue <ChevronRight size={14} /></span>
-              </button>
-            ))}
-          </div>
+      <div className="rs-picker">
+        <p className="rs-picker-eyebrow">One household</p>
+        <h2 className="rs-picker-title">Whose view are you opening?</h2>
+        <p className="rs-picker-desc">Same family, different privacy — each person's health information belongs to them.</p>
+        <div className="rs-picker-grid">
+          {PROFILE_CARDS.map((p) => (
+            <button key={p.k} className="rs-picker-card" onClick={() => setProfile(p.k)}>
+              <span className="rs-picker-badge" style={{ background: p.color }}><p.Illus /></span>
+              <div>
+                <b className="rs-picker-name">{p.name}</b>
+                <span className="rs-picker-role">{p.role}</span>
+                <small className="rs-picker-sub">{p.sub}</small>
+              </div>
+            </button>
+          ))}
         </div>
       </div>
     );
@@ -4202,36 +4124,13 @@ function UserShell() {
 
   return (
     <div>
-      <button className="persona-back-btn" onClick={() => setProfile(null)}><ChevronLeft size={15} /> Switch profile</button>
+      <button className="rs-picker-back" onClick={() => setProfile(null)}><ChevronLeft size={14} /> Switch profile</button>
       {profile === "ramesh" && React.createElement(Module_Ramesh, { familyData, setFamilyData })}
       {profile === "phulmani" && React.createElement(Module_Phulmani, { familyData, setFamilyData })}
       {profile === "anjali" && React.createElement(Module_Anjali, { familyData, setFamilyData })}
     </div>
   );
 }
-
-const USER_PERSONA_PICK_CSS = `
-*{box-sizing:border-box;}
-.persona-pick-root{font-family:'Mukta',system-ui,sans-serif;background:#FAF5EE;min-height:100vh;}
-.persona-pick-wrap{max-width:920px;margin:0 auto;padding:56px 22px 60px;text-align:center;}
-.persona-pick-eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#C08A2D;margin:0 0 10px;}
-.persona-pick-h2{font-size:27px;font-weight:800;color:#2A1F1D;margin:0 0 8px;}
-.persona-pick-lead{font-size:14.5px;color:#6B5D58;margin:0 0 36px;line-height:1.5;}
-.persona-pick-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
-.persona-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;background:#fff;border:1px solid #EADFCF;border-radius:24px;padding:30px 22px 26px;cursor:pointer;text-align:center;overflow:hidden;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;}
-.persona-card:hover{transform:translateY(-4px);box-shadow:0 18px 34px -14px rgba(40,30,20,.22);border-color:var(--accent);}
-.persona-card:hover .persona-card-cta{opacity:1;transform:translateY(0);}
-.persona-card:hover .persona-card-glow{opacity:1;}
-.persona-card-glow{position:absolute;inset:0;background:radial-gradient(120px 90px at 50% -10%, var(--accent-soft), transparent 70%);opacity:.6;transition:opacity .2s ease;pointer-events:none;}
-.persona-card-ic{position:relative;width:60px;height:60px;border-radius:18px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:6px;}
-.persona-card-name{position:relative;font-size:17px;color:#2A1F1D;}
-.persona-card-role{position:relative;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.03em;}
-.persona-card-desc{position:relative;font-size:12.5px;color:#6B5D58;line-height:1.5;margin-top:2px;}
-.persona-card-cta{position:relative;display:flex;align-items:center;gap:3px;margin-top:10px;font-size:12px;font-weight:700;color:var(--accent);opacity:0;transform:translateY(4px);transition:opacity .2s ease, transform .2s ease;}
-.persona-back-btn{display:flex;align-items:center;gap:5px;margin:14px;padding:9px 15px;background:#fff;border:1px solid #EADFCF;border-radius:11px;font-size:13px;font-weight:600;color:#6B5D58;cursor:pointer;}
-.persona-back-btn:hover{border-color:#C08A2D;color:#2A1F1D;}
-@media(max-width:700px){.persona-pick-grid{grid-template-columns:1fr;}}
-`;
 
 </script>
 <script id="module-nutrition-checker" type="text/babel" data-presets="react">
@@ -4370,18 +4269,7 @@ function Annotation({ a }) {
 }
 
 function App() {
-  const [orientation, setOrientation] = useState(() => {
-    if (typeof window === "undefined") return "landscape";
-    if (!window.matchMedia("(max-width: 900px)").matches) return "landscape";
-    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
-  });
-  useEffect(() => {
-    const orientMq = window.matchMedia("(orientation: portrait)");
-    const mobileMq = window.matchMedia("(max-width: 900px)");
-    const handleOrientation = () => { if (mobileMq.matches) setOrientation(orientMq.matches ? "portrait" : "landscape"); };
-    orientMq.addEventListener("change", handleOrientation);
-    return () => orientMq.removeEventListener("change", handleOrientation);
-  }, []);
+  const [orientation, setOrientation] = useState("landscape");
   const [lensOn, setLensOn] = useState(true);
   const [mobileLens, setMobileLens] = useState(false);
 
@@ -4578,7 +4466,7 @@ const NC_CSS = `
 .nc-stack-portrait .nc-row-top,.nc-stack-portrait .nc-row-bottom{flex:none;}
 .nc-stack-portrait .nc-row-bottom{display:flex;flex-direction:column;gap:8px;}
 .nc-cell{display:flex;min-width:0;min-height:0;}
-.nc-card{background:#fff;border:1px solid ${NC.line};border-radius:14px;padding:7px;width:100%;min-width:0;overflow:hidden;}
+.nc-card{background:#fff;border:1px solid ${NC.line};border-radius:14px;padding:7px;width:100%;min-width:0;}
 .nc-diet-card,.nc-check-card,.nc-scale-card{display:flex;flex-direction:column;}
 .nc-h2-sm{font-size:12px;margin:0 0 4px;}
 .nc-lead-xs{font-size:9.5px;color:${NC.inkSoft};line-height:1.3;margin:0 0 5px;}
@@ -4644,10 +4532,9 @@ const CSS = `
 .legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:${NC.inkSoft};}
 .legend-item i{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none;}
 .devicewrap{display:flex;flex-direction:column;align-items:center;gap:14px;position:sticky;top:90px;min-width:0;width:100%;}
-.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;}
-.device.landscape{contain:layout size;}
+.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;contain:layout size;}
 .device.portrait{width:390px;height:792px;border-radius:40px;padding:11px;}
-.device.landscape{width:min(1060px,100%,calc((100vh - 230px)*1.559));height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
+.device.landscape{width:min(1060px,100%);height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
 .device-notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:130px;height:26px;background:#1c1413;border-radius:0 0 16px 16px;z-index:5;}
 .device.landscape .device-notch{display:none;}
 .device-screen{width:100%;height:100%;background:${NC.paper};border-radius:30px;overflow:hidden;position:relative;}
@@ -4662,20 +4549,12 @@ const CSS = `
 .sheet{background:#fff;border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
 .sheet-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:6px;}
 .sheet-head button{border:0;background:none;}
-@media(max-width:1080px){.stage{grid-template-columns:1fr;max-width:920px;}.rail-left,.rail-right{display:none;}.devicewrap{position:static;}
+@media(max-width:1000px){.stage{grid-template-columns:1fr;max-width:920px;}.rail-left,.rail-right{display:none;}.devicewrap{position:static;}
   .mobile-lens-btn{display:flex;}
 }
 @media(max-width:920px){
-  .device.landscape{width:min(100%,900px,calc((100vh - 200px)*1.559));height:auto;aspect-ratio:1060/680;}
+  .device.landscape{width:100%;max-width:900px;height:auto;aspect-ratio:1060/680;}
   .device.portrait{width:100%;max-width:360px;height:auto;aspect-ratio:390/792;}
-}
-@media(max-height:520px){
-  .topbar{padding:6px 14px!important;}
-  .stage{padding:8px 10px!important;}
-  .mobile-lens-btn{display:none!important;}
-  .devicewrap{gap:4px!important;}
-  .device.landscape{width:min(1060px,100%,calc((100vh - 60px)*1.559))!important;}
-  .rail-left,.rail-right{display:none!important;}
 }
 *:focus-visible{outline:2px solid ${NC.gold};outline-offset:2px;}
 `;
@@ -4752,18 +4631,7 @@ function Annotation({ a }) {
 }
 
 function App() {
-  const [orientation, setOrientation] = useState(() => {
-    if (typeof window === "undefined") return "landscape";
-    if (!window.matchMedia("(max-width: 900px)").matches) return "landscape";
-    return window.matchMedia("(orientation: portrait)").matches ? "portrait" : "landscape";
-  });
-  useEffect(() => {
-    const orientMq = window.matchMedia("(orientation: portrait)");
-    const mobileMq = window.matchMedia("(max-width: 900px)");
-    const handleOrientation = () => { if (mobileMq.matches) setOrientation(orientMq.matches ? "portrait" : "landscape"); };
-    orientMq.addEventListener("change", handleOrientation);
-    return () => orientMq.removeEventListener("change", handleOrientation);
-  }, []);
+  const [orientation, setOrientation] = useState("landscape");
   const [lensOn, setLensOn] = useState(true);
   const [mobileLens, setMobileLens] = useState(false);
 
@@ -4939,9 +4807,8 @@ const AG_CSS = `
 .ag-quad{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.2fr 1fr;gap:8px;padding:8px;overflow-y:auto;min-height:0;}
 .ag-quad-portrait{grid-template-columns:1fr;grid-template-rows:none;}
 .ag-cell{display:flex;min-width:0;min-height:0;}
-.ag-quad-portrait .ag-cell{align-self:start;}
-.ag-card{background:#fff;border:1px solid ${AG.line};border-radius:14px;padding:9px;width:100%;min-width:0;overflow:hidden;}
-.ag-pyramid-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;}
+.ag-card{background:#fff;border:1px solid ${AG.line};border-radius:14px;padding:9px;width:100%;min-width:0;}
+.ag-pyramid-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
 .ag-target{display:flex;align-items:center;gap:8px;background:${AG.line}55;border:2px solid ${AG.garnet};border-radius:10px;padding:8px 11px;width:100%;min-width:0;}
 .ag-target b{font-size:10.5px;display:block;} .ag-target small{display:block;font-size:8px;color:${AG.inkSoft};line-height:1.25;}
 .ag-pyr-svg{width:100%;max-width:230px;flex:none;display:block;}
@@ -4993,10 +4860,9 @@ const CSS = `
 .legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:${AG.inkSoft};}
 .legend-item i{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none;}
 .devicewrap{display:flex;flex-direction:column;align-items:center;gap:14px;position:sticky;top:90px;min-width:0;width:100%;}
-.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;}
-.device.landscape{contain:layout size;}
+.device{background:#1c1413;border-radius:30px;padding:10px;box-shadow:0 30px 60px -18px rgba(40,40,60,.35),0 0 0 2px #2a1f1d;position:relative;transition:width .25s,height .25s;contain:layout size;}
 .device.portrait{width:390px;height:792px;border-radius:40px;padding:11px;}
-.device.landscape{width:min(1060px,100%,calc((100vh - 230px)*1.559));height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
+.device.landscape{width:min(1060px,100%);height:auto;aspect-ratio:1060/680;border-radius:22px;padding:14px;}
 .device-notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:130px;height:26px;background:#1c1413;border-radius:0 0 16px 16px;z-index:5;}
 .device.landscape .device-notch{display:none;}
 .device-screen{width:100%;height:100%;background:${AG.paper};border-radius:30px;overflow:hidden;position:relative;}
@@ -5011,20 +4877,12 @@ const CSS = `
 .sheet{background:#fff;border-radius:20px 20px 0 0;padding:18px;width:100%;max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
 .sheet-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:6px;}
 .sheet-head button{border:0;background:none;}
-@media(max-width:1080px){.stage{grid-template-columns:1fr;max-width:920px;}.rail-left,.rail-right{display:none;}.devicewrap{position:static;}
+@media(max-width:1000px){.stage{grid-template-columns:1fr;max-width:920px;}.rail-left,.rail-right{display:none;}.devicewrap{position:static;}
   .mobile-lens-btn{display:flex;}
 }
 @media(max-width:920px){
-  .device.landscape{width:min(100%,900px,calc((100vh - 200px)*1.559));height:auto;aspect-ratio:1060/680;}
+  .device.landscape{width:100%;max-width:900px;height:auto;aspect-ratio:1060/680;}
   .device.portrait{width:100%;max-width:360px;height:auto;aspect-ratio:390/792;}
-}
-@media(max-height:520px){
-  .topbar{padding:6px 14px!important;}
-  .stage{padding:8px 10px!important;}
-  .mobile-lens-btn{display:none!important;}
-  .devicewrap{gap:4px!important;}
-  .device.landscape{width:min(1060px,100%,calc((100vh - 60px)*1.559))!important;}
-  .rail-left,.rail-right{display:none!important;}
 }
 *:focus-visible{outline:2px solid ${AG.gold};outline-offset:2px;}
 `;
@@ -5035,51 +4893,134 @@ return App;
 /* ============================================================
    TOP-LEVEL APP SHELL — 4-tile landing + persistent tab bar
    ============================================================ */
+const IllusAdmin = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+    <rect x="2" y="2" width="20" height="20" rx="3" stroke="white" strokeWidth="1.5"/>
+    <rect x="6" y="13" width="3" height="6" rx="0.5" fill="white"/>
+    <rect x="10.5" y="10" width="3" height="9" rx="0.5" fill="white"/>
+    <rect x="15" y="11.5" width="3" height="7.5" rx="0.5" fill="white"/>
+    <path d="M6 11L10.5 8.5L15 10L18 7.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IllusFamily = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+    <path d="M3 11L12 3L21 11" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M5 10V21H10V16H14V21H19V10" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="8.5" cy="13.5" r="1.2" fill="white"/>
+    <circle cx="15.5" cy="13.5" r="1.2" fill="white"/>
+  </svg>
+);
+const IllusNutrition = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+    <path d="M5 12C5 16.4 8.1 20 12 20C15.9 20 19 16.4 19 12H5Z" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M4 12H20" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M4 21H20" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M12 12V8.5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M12 8.5C11 7.5 9.5 7 8.5 5C10.5 4.5 12.5 6 12 8.5Z" fill="white"/>
+    <path d="M12 8.5C13 7.5 14.5 7 15.5 5C13.5 4.5 11.5 6 12 8.5Z" fill="white" fillOpacity="0.7"/>
+  </svg>
+);
+const IllusAMB = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2L4 6V12C4 17 7.6 21.5 12 22C16.4 21.5 20 17 20 12V6L12 2Z" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M12 7C12 7 9.5 11 9.5 13.5C9.5 14.9 10.6 16 12 16C13.4 16 14.5 14.9 14.5 13.5C14.5 11 12 7 12 7Z" fill="white"/>
+  </svg>
+);
+
 const TOP_SECTIONS = [
-  { k: "admin", label: "Admin", sub: "Program Supervisor & ASHA", icon: LayoutDashboard, color: "#2B5B86" },
-  { k: "user", label: "User", sub: "Ramesh, Phulmani & Anjali", icon: Users, color: "#7A1F2B" },
-  { k: "nutrition", label: "Nutrition Tips & Symptom Checker", sub: "No login needed", icon: Activity, color: "#2F6B5E" },
-  { k: "amb", label: "Anemia Mukt Bharat", sub: "Programme goals & 6×6×6", icon: ShieldCheck, color: "#C08A2D" },
+  { k: "admin", label: "Admin", sub: "Program Supervisor & ASHA", icon: LayoutDashboard, Illus: IllusAdmin, color: "linear-gradient(135deg, #3B70A8 0%, #1E4472 100%)" },
+  { k: "user", label: "User", sub: "Ramesh, Phulmani & Anjali", icon: Users, Illus: IllusFamily, color: "linear-gradient(135deg, #A02535 0%, #5A141E 100%)" },
+  { k: "nutrition", label: "Nutrition Tips & Symptom Checker", sub: "No login needed", icon: Activity, Illus: IllusNutrition, color: "linear-gradient(135deg, #3D8570 0%, #1D5444 100%)" },
+  { k: "amb", label: "Anemia Mukt Bharat", sub: "Programme goals & 6×6×6", icon: ShieldCheck, Illus: IllusAMB, color: "linear-gradient(135deg, #D4A545 0%, #A06F20 100%)" },
 ];
+
+/* Linear order the </> back/forward stepper walks through — the 5 personas
+   in the same sequence as their "Persona N of 5" labels, plus the two
+   no-login reference screens. */
+const PERSONA_FLOW = [
+  { section: "admin", role: "supervisor", label: "Dr. Nair — Supervisor" },
+  { section: "admin", role: "asha", label: "Sunita — ASHA Worker" },
+  { section: "user", profile: "ramesh", label: "Ramesh — Head of Household" },
+  { section: "user", profile: "phulmani", label: "Phulmani — Her Own View" },
+  { section: "user", profile: "anjali", label: "Anjali — The Daughter" },
+  { section: "nutrition", label: "Nutrition Tips & Symptom Checker" },
+  { section: "amb", label: "Anemia Mukt Bharat Goals" },
+];
+function flowIndexFor(section, adminRole, userProfile) {
+  return PERSONA_FLOW.findIndex((f) => {
+    if (f.section !== section) return false;
+    if (f.role) return f.role === adminRole;
+    if (f.profile) return f.profile === userProfile;
+    return true;
+  });
+}
 
 function RaktaSetuApp() {
   const [activeSection, setActiveSection] = useState(null);
+  const [adminRole, setAdminRole] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+
+  const flowIndex = activeSection ? flowIndexFor(activeSection, adminRole, userProfile) : -1;
+
+  function goHome() { setActiveSection(null); setAdminRole(null); setUserProfile(null); }
+  function goToFlow(i) {
+    const step = PERSONA_FLOW[i];
+    setActiveSection(step.section);
+    setAdminRole(step.role || null);
+    setUserProfile(step.profile || null);
+  }
+  function goPrev() { flowIndex <= 0 ? goHome() : goToFlow(flowIndex - 1); }
+  function goNext() { (flowIndex === -1 || flowIndex >= PERSONA_FLOW.length - 1) ? goHome() : goToFlow(flowIndex + 1); }
+  function openSection(k) { setActiveSection(k); setAdminRole(null); setUserProfile(null); }
 
   return (
     <div className="rs-app-root">
       <style>{APP_SHELL_CSS}</style>
       <header className="rs-app-top">
-        <button className="rs-app-brand" onClick={() => setActiveSection(null)}>
+        <button className="rs-app-brand" onClick={goHome}>
           <span className="rs-app-brand-ic"><Droplet size={18} /></span>
           <b>RaktaSetu</b>
         </button>
         {activeSection && (
-          <nav className="rs-app-tabbar">
-            {TOP_SECTIONS.map((s) => (
-              <button key={s.k} className={"rs-app-tab" + (activeSection === s.k ? " on" : "")} onClick={() => setActiveSection(s.k)} title={s.label}>
-                <s.icon size={16} /><span>{s.label.split(" ")[0]}</span>
-              </button>
-            ))}
-          </nav>
+          <div className="rs-app-right">
+            <nav className="rs-app-stepper" aria-label="Step through personas">
+              <button onClick={goPrev} title="Back"><ChevronLeft size={16} /></button>
+              <span className="rs-app-step-count">{flowIndex === -1 ? "–" : `${flowIndex + 1} / ${PERSONA_FLOW.length}`}</span>
+              <button onClick={goNext} title="Forward"><ChevronRight size={16} /></button>
+            </nav>
+            <nav className="rs-app-tabbar">
+              {TOP_SECTIONS.map((s) => (
+                <button key={s.k} className={"rs-app-tab" + (activeSection === s.k ? " on" : "")} onClick={() => openSection(s.k)} title={s.label}>
+                  <s.icon size={16} /><span>{s.label.split(" ")[0]}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
         )}
       </header>
 
       {!activeSection ? (
-        <div className="rs-app-tiles">
-          <p className="rs-app-tiles-lead">A digital anemia-care companion for Sitamarhi, Bihar — built around Anemia Mukt Bharat.</p>
-          <div className="rs-app-tile-grid">
-            {TOP_SECTIONS.map((s) => (
-              <button key={s.k} className="rs-app-tile" onClick={() => setActiveSection(s.k)}>
-                <span className="rs-app-tile-ic" style={{ background: s.color }}><s.icon size={26} /></span>
-                <b>{s.label}</b><small>{s.sub}</small>
-              </button>
-            ))}
+        <>
+          <div className="rs-app-hero">
+            <div className="rs-app-hero-eyebrow"><ShieldCheck size={12} /> Anemia Mukt Bharat · Sitamarhi, Bihar</div>
+            <h1 className="rs-app-hero-title">Caring for every family,<br/>one visit at a time</h1>
+            <p className="rs-app-hero-sub">A digital companion for anemia care — connecting programme supervisors, ASHA field workers, and the families they serve.</p>
           </div>
-        </div>
+          <div className="rs-app-tiles">
+            <div className="rs-app-tile-grid">
+              {TOP_SECTIONS.map((s) => (
+                <button key={s.k} className="rs-app-tile" onClick={() => openSection(s.k)}>
+                  <span className="rs-app-tile-ic" style={{ background: s.color }}><s.Illus /></span>
+                  <div><b>{s.label}</b><small>{s.sub}</small></div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
       ) : (
         <div className="rs-app-section-body">
-          {activeSection === "admin" && React.createElement(AdminShell)}
-          {activeSection === "user" && React.createElement(UserShell)}
+          {activeSection === "admin" && React.createElement(AdminShell, { role: adminRole, setRole: setAdminRole })}
+          {activeSection === "user" && React.createElement(UserShell, { profile: userProfile, setProfile: setUserProfile })}
           {activeSection === "nutrition" && React.createElement(Module_Nutrition)}
           {activeSection === "amb" && React.createElement(Module_AmbGoals)}
         </div>
@@ -5090,23 +5031,87 @@ function RaktaSetuApp() {
 
 const APP_SHELL_CSS = `
 *{box-sizing:border-box;}
-.rs-app-root{font-family:'Mukta',system-ui,sans-serif;background:#FAF5EE;min-height:100vh;}
-.rs-app-top{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#fff;border-bottom:1px solid #EADFCF;position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:10px;}
-.rs-app-brand{display:flex;align-items:center;gap:9px;background:none;border:0;cursor:pointer;font-size:16px;color:#2A1F1D;padding:0;}
-.rs-app-brand-ic{width:32px;height:32px;border-radius:9px;background:#7A1F2B;color:#fff;display:grid;place-items:center;}
-.rs-app-tabbar{display:flex;gap:4px;background:#FAF5EE;border-radius:12px;padding:4px;}
-.rs-app-tab{display:flex;align-items:center;gap:5px;border:0;background:transparent;padding:8px 12px;border-radius:9px;font-size:12px;font-weight:600;color:#6B5D58;cursor:pointer;}
+.rs-app-root{font-family:'Mukta',system-ui,sans-serif;background:#FAF5EE;min-height:100vh;color:#2A1F1D;}
+
+/* ---- Sticky header ---- */
+.rs-app-top{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #EADFCF;position:sticky;top:0;z-index:50;flex-wrap:wrap;gap:10px;}
+.rs-app-brand{display:flex;align-items:center;gap:10px;background:none;border:0;cursor:pointer;font-size:17px;font-weight:700;color:#2A1F1D;padding:0;font-family:inherit;letter-spacing:-.01em;}
+.rs-app-brand-ic{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7A1F2B,#5A141E);color:#fff;display:grid;place-items:center;box-shadow:0 2px 8px rgba(122,31,43,.25);}
+
+/* ---- Right side of header: stepper + tab bar ---- */
+.rs-app-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+
+/* ---- Back/forward persona stepper ---- */
+.rs-app-stepper{display:flex;align-items:center;gap:6px;background:#F0EAE0;border-radius:12px;padding:4px 6px;}
+.rs-app-stepper button{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border:0;border-radius:8px;background:#fff;color:#7A1F2B;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.08);transition:background .15s,transform .1s;}
+.rs-app-stepper button:hover{background:#FEF6E4;}
+.rs-app-stepper button:active{transform:scale(.94);}
+.rs-app-stepper button:focus-visible{outline:2px solid #C08A2D;outline-offset:2px;}
+.rs-app-step-count{font-size:11.5px;font-weight:700;color:#6B5D58;min-width:42px;text-align:center;letter-spacing:.02em;}
+
+/* ---- Tab bar ---- */
+.rs-app-tabbar{display:flex;gap:2px;background:#F0EAE0;border-radius:12px;padding:4px;}
+.rs-app-tab{display:flex;align-items:center;gap:6px;border:0;background:transparent;padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;color:#6B5D58;cursor:pointer;transition:background .15s,color .15s;font-family:inherit;min-height:38px;}
 .rs-app-tab.on{background:#fff;color:#7A1F2B;box-shadow:0 1px 4px rgba(0,0,0,.08);}
-.rs-app-tiles{padding:40px 20px;max-width:760px;margin:0 auto;}
-.rs-app-tiles-lead{text-align:center;color:#6B5D58;font-size:14px;margin-bottom:28px;}
-.rs-app-tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.rs-app-tile{display:flex;flex-direction:column;align-items:flex-start;gap:10px;background:#fff;border:1px solid #EADFCF;border-radius:20px;padding:22px;cursor:pointer;text-align:left;transition:transform .15s, box-shadow .15s;}
-.rs-app-tile:hover{transform:translateY(-2px);box-shadow:0 10px 24px -8px rgba(0,0,0,.12);}
-.rs-app-tile-ic{width:48px;height:48px;border-radius:14px;color:#fff;display:grid;place-items:center;}
-.rs-app-tile b{font-size:15px;color:#2A1F1D;line-height:1.3;}
-.rs-app-tile small{font-size:11.5px;color:#6B5D58;}
+.rs-app-tab:hover:not(.on){background:rgba(255,255,255,.5);color:#2A1F1D;}
+.rs-app-tab:focus-visible{outline:2px solid #C08A2D;outline-offset:2px;}
+
+/* ---- Landing hero ---- */
+.rs-app-hero{padding:52px 24px 8px;max-width:800px;margin:0 auto;text-align:center;}
+.rs-app-hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9A6A14;background:#FEF6E4;border:1px solid #EDDDA0;border-radius:20px;padding:5px 14px;margin-bottom:20px;}
+.rs-app-hero-title{font-size:clamp(24px,5vw,38px);font-weight:700;letter-spacing:-.02em;line-height:1.2;margin:0 0 14px;color:#2A1F1D;}
+.rs-app-hero-sub{font-size:15px;color:#6B5D58;line-height:1.65;margin:0 auto 48px;max-width:520px;}
+
+/* ---- Tile grid ---- */
+.rs-app-tiles{padding:0 20px 64px;max-width:840px;margin:0 auto;}
+.rs-app-tile-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+.rs-app-tile{display:flex;flex-direction:column;align-items:flex-start;gap:16px;background:#fff;border:1.5px solid #EADFCF;border-radius:22px;padding:26px 24px 36px;cursor:pointer;text-align:left;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;font-family:inherit;min-height:184px;position:relative;}
+.rs-app-tile::after{content:'→';position:absolute;right:24px;bottom:22px;font-size:18px;color:#DDD4C4;transition:color .2s,transform .2s;}
+.rs-app-tile:hover{transform:translateY(-3px);box-shadow:0 18px 44px -12px rgba(42,31,29,.13);border-color:#D4C4B0;}
+.rs-app-tile:hover::after{color:#C08A2D;transform:translateX(3px);}
+.rs-app-tile:focus-visible{outline:2px solid #C08A2D;outline-offset:2px;}
+.rs-app-tile:active{transform:translateY(-1px);}
+.rs-app-tile-ic{width:62px;height:62px;border-radius:18px;color:#fff;display:grid;place-items:center;flex-shrink:0;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+.rs-app-tile b{font-size:16px;color:#2A1F1D;line-height:1.3;display:block;margin-bottom:4px;}
+.rs-app-tile small{font-size:12.5px;color:#6B5D58;line-height:1.5;display:block;}
+
+/* ---- Section body ---- */
 .rs-app-section-body{min-height:80vh;}
-@media(max-width:560px){.rs-app-tile-grid{grid-template-columns:1fr;} .rs-app-tab span{display:none;}}
+
+/* ---- Picker screens (admin/user role/profile selection) ---- */
+.rs-picker{padding:40px 24px 60px;font-family:'Mukta',system-ui,sans-serif;background:#FAF5EE;min-height:80vh;}
+.rs-picker-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C08A2D;display:flex;align-items:center;gap:6px;margin-bottom:12px;}
+.rs-picker-title{font-size:23px;font-weight:700;margin:0 0 8px;color:#2A1F1D;letter-spacing:-.01em;line-height:1.25;}
+.rs-picker-desc{font-size:14px;color:#6B5D58;margin:0 0 32px;line-height:1.6;max-width:540px;}
+.rs-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;max-width:800px;}
+.rs-picker-card{display:flex;flex-direction:column;align-items:flex-start;gap:16px;background:#fff;border:1.5px solid #EADFCF;border-radius:22px;padding:24px 22px;cursor:pointer;text-align:left;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;font-family:inherit;}
+.rs-picker-card:hover{transform:translateY(-2px);box-shadow:0 14px 32px -8px rgba(0,0,0,.11);border-color:#D4C4B0;}
+.rs-picker-card:focus-visible{outline:2px solid #C08A2D;outline-offset:2px;}
+.rs-picker-badge{width:60px;height:60px;border-radius:18px;color:#fff;display:grid;place-items:center;flex-shrink:0;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+.rs-picker-name{font-size:15px;font-weight:700;color:#2A1F1D;display:block;margin-bottom:3px;}
+.rs-picker-role{font-size:13px;font-weight:600;color:#6B5D58;display:block;margin-bottom:6px;}
+.rs-picker-sub{font-size:11.5px;color:#9B8E88;display:block;line-height:1.5;}
+.rs-picker-back{margin:12px 20px;display:inline-flex;align-items:center;gap:6px;border:1.5px solid #EADFCF;background:#fff;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;color:#6B5D58;cursor:pointer;font-family:'Mukta',system-ui,sans-serif;transition:border-color .15s,background .15s;}
+.rs-picker-back:hover{background:#FAF5EE;border-color:#D4C4B0;}
+.rs-picker-back:focus-visible{outline:2px solid #C08A2D;outline-offset:2px;}
+
+@media(max-width:560px){
+  .rs-app-tile-grid{grid-template-columns:1fr;}
+  .rs-app-tab span{display:none;}
+  .rs-app-step-count{display:none;}
+  .rs-app-stepper{padding:4px;gap:2px;}
+  .rs-app-hero{padding:36px 18px 8px;}
+  .rs-app-hero-sub{font-size:13.5px;margin-bottom:36px;}
+  .rs-app-tiles{padding:0 16px 44px;}
+  .rs-app-tile{padding:20px 18px 32px;min-height:unset;}
+  .rs-app-tile-ic{width:52px;height:52px;}
+  .rs-picker{padding:28px 18px 40px;}
+  .rs-picker-grid{grid-template-columns:1fr;}
+}
+@media(max-width:380px){
+  .rs-app-top{padding:12px 16px;}
+  .rs-picker-title{font-size:20px;}
+}
 `;
 
 window.__rsRoot = createRoot(document.getElementById("root"));
